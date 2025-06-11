@@ -1,7 +1,7 @@
 ![Screenshot 2025-06-11 174638](https://github.com/user-attachments/assets/5c936744-5ac0-42bf-b8ca-4a1f055460d1)
 # GeoJSON Cleaner Dashboard
 
-A prototype of Streamlit app for easy cleaning and geometry fixing of GeoJSON files and previewing on a leaflet map.
+A prototype of [Streamlit app](https://geojson-cleaner.streamlit.app/) for automated cleaning and geometry fixing of GeoJSON files and previewing on a leaflet map.
 
 ---
 
@@ -15,43 +15,29 @@ A prototype of Streamlit app for easy cleaning and geometry fixing of GeoJSON fi
 
 ---
 
-##  Project Structure
-
-```sh
-└── GeoJSON_Cleaner_Dashboard/
-    ├── Dockerfile
-    ├── Farm_file.geojson
-    ├── README.md
-    ├── dashboard.py
-    ├── requirements.txt
-    ├── sample_output.geojson
-    └── utils.py
-```
-
-
-###  Project Index
+##  Project Index
 <table>
 <tr>
     <td><b><a href='https://github.com/viktor-ko/GeoJSON_Cleaner_Dashboard/blob/master/dashboard.py'>dashboard.py</a></b></td>
-    <td><code>❯ REPLACE-ME</code></td>
+    <td><code>❯ Main Streamlit app script, handles page layout, file upload, shows logs, attribute tables, map preview and download button</code></td>
 </tr>
 <tr>
     <td><b><a href='https://github.com/viktor-ko/GeoJSON_Cleaner_Dashboard/blob/master/utils.py'>utils.py</a></b></td>
-    <td><code>❯ REPLACE-ME</code></td>
+    <td><code>❯ Helper functions for fixing GeoJSON geometries, performing validation, removing duplicates and creating a folium map</code></td>
 </tr>
 <td><b><a href='https://github.com/viktor-ko/GeoJSON_Cleaner_Dashboard/blob/master/Farm_file.geojson'>Farm_file.geojson</a></b></td>
-    <td><code>❯ REPLACE-ME</code></td>
+    <td><code>❯ Sample input GeoJSON file</code></td>
 <tr>
     <td><b><a href='https://github.com/viktor-ko/GeoJSON_Cleaner_Dashboard/blob/master/sample_output.geojson'>sample_output.geojson</a></b></td>
-    <td><code>❯ REPLACE-ME</code></td>
+    <td><code>❯ Sample of a cleaned GeoJSON file produced by the app</code></td>
 </tr>
 <tr>
     <td><b><a href='https://github.com/viktor-ko/GeoJSON_Cleaner_Dashboard/blob/master/requirements.txt'>requirements.txt</a></b></td>
-    <td><code>❯ REPLACE-ME</code></td>
+    <td><code>❯ List of all needed Python dependencies</code></td>
 </tr>
 <tr>
     <td><b><a href='https://github.com/viktor-ko/GeoJSON_Cleaner_Dashboard/blob/master/Dockerfile'>Dockerfile</a></b></td>
-    <td><code>❯ REPLACE-ME</code></td>
+    <td><code>❯ Instructions for building a Docker container image</code></td>
 </tr>
 </table>
 
@@ -73,7 +59,7 @@ A prototype of Streamlit app for easy cleaning and geometry fixing of GeoJSON fi
     ```bash
    pip install -r requirements.txt
     ```
-3. Run the app
+3. Run the Streamlit app
     ```bash
    streamlit run dashboard.py
     ```
@@ -114,10 +100,10 @@ CMD ["bash", "-c", "echo 'Use this URL: http://localhost:8501' && streamlit run 
 ```
 
 **Explanation:**
-- `FROM` — base image
+- `FROM` — base image, use a smaller version of Python 3.13 to reduce the Docker image size.
 - `WORKDIR` — container working directory  
-- `COPY` — copy app files and requirements into container  
-- `RUN` — install Python packages  
+- `COPY` — copy app files and requirements.txt into container. `./` refers to the current directory  
+- `RUN` — install Python packages. `--no-cache-dir` ignores packages cache, which reduces Docker image size  
 - `EXPOSE` — open port 8501 (Streamlit default)  
 - `CMD` — run the app and print access URL
 
@@ -138,6 +124,8 @@ Run in terminal where your `Dockerfile` is:
 ```bash
 docker build -t geojson-dashboard .
 ```
+`.` at the end - current directory.
+If it built successfully, you should see the message`FINISHED`in the terminal.
 
 ---
 
@@ -146,6 +134,7 @@ docker build -t geojson-dashboard .
 ```bash
 docker images
 ```
+List all Docker images on your machine. You should see `geojson-dashboard` in the list of images.
 
 ---
 
@@ -167,7 +156,7 @@ docker save -o geojson-dashboard.tar geojson-dashboard
 
 ---
 
-### 📦 Load the Image on Another Machine
+### 📦 Load the image on another machine
 
 Copy the `.tar` file to the target machine, then run:
 
@@ -185,7 +174,7 @@ docker run -p 8501:8501 geojson-dashboard
 
 ### ✅ Done
 
-That’s it — your GeoJSON Cleaner Dashboard is containerized and portable!
+That’s it — GeoJSON Cleaner Dashboard is containerized and portable!
 
 ---
 
