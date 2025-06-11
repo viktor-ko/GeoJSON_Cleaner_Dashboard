@@ -69,9 +69,11 @@ A prototype of [Streamlit app](https://geojson-cleaner.streamlit.app/) for autom
 
 To containerize the Streamlit app using Docker on a Windows machine, follow these steps:
 
-### 1️⃣ Install Docker Desktop  
+### 1️⃣ Install Docker Desktop
+
 Download it here: https://www.docker.com/get-started  
 Run it after installation — you can skip the account creation if you don’t need Docker Hub.
+
 ---
 
 ### 2️⃣ Create a `requirements.txt` file  
@@ -175,6 +177,4 @@ docker run -p 8501:8501 geojson-dashboard
 ### ✅ Done
 
 That’s it — GeoJSON Cleaner Dashboard is containerized and portable!
-
----
 
