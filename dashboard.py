@@ -1,5 +1,7 @@
 import streamlit as st
 from streamlit_folium import st_folium
+import requests
+from io import BytesIO
 from utils import (read_geojson_to_gdf, validate_and_fix_geometries, remove_exact_duplicates, remove_near_duplicates,
                    export_cleaned_geojson, add_folium_map)
 
@@ -9,10 +11,37 @@ st.set_page_config(layout="wide")
 
 st.title("GeoJSON Cleaning Dashboard")
 
-uploaded_file = st.file_uploader("📂 Upload your GeoJSON file", type=["geojson"])
+# 📂 Upload file or use sample
+st.markdown("## 📂 Upload your GeoJSON file or use a sample GeoJSON")
 
-if uploaded_file:
-    original_name, gdf, original_crs, original_json = read_geojson_to_gdf(uploaded_file)
+col2, col1 = st.columns([0.1, 0.9], gap="small", vertical_alignment="center")
+
+with col1:
+    uploaded_file = st.file_uploader("Upload GeoJSON file", type=["geojson"])
+
+with col2:
+    use_sample = st.button("📄 Use sample file")
+
+# Initialize session state for sample file
+if "sample_file" not in st.session_state:
+    st.session_state["sample_file"] = None
+
+# Load sample file if selected
+if use_sample:
+    sample_url = "https://raw.githubusercontent.com/viktor-ko/GeoJSON_Cleaner_Dashboard/refs/heads/master/Farm_file.geojson"
+    response = requests.get(sample_url)
+    if response.status_code == 200:
+        sample_file = BytesIO(response.content)
+        sample_file.name = "Sample_Farm_file.geojson"
+        st.session_state["sample_file"] = sample_file
+    else:
+        st.error("❌ Failed to fetch sample file.")
+
+
+file_to_process = uploaded_file or st.session_state["sample_file"]
+
+if file_to_process:
+    original_name, gdf, original_crs, original_json = read_geojson_to_gdf(file_to_process)
 
     logs = st.expander("📝 Show Cleaning Logs", expanded=True)
 
@@ -30,7 +59,7 @@ if uploaded_file:
 
         st.success("✅ Cleaning complete!")
 
-    cleaned_json_str = export_cleaned_geojson(gdf, original_crs, original_name)
+    cleaned_json_str = export_cleaned_geojson(gdf, original_crs, file_to_process.name)
 
     #Oranise the dashboard in two equal columns for tables and map
     tables, leaflet_map = st.columns([1, 1])
